@@ -5,20 +5,22 @@ set(PROJECT_NAME ArduinoSketch)
 
 set(${PROJECT_NAME}_BOARD uno)
 # set(ARDUINO_CPU)
+
 project(${PROJECT_NAME})
-
-# Define additional source and header files or default arduino sketch files
-# set(${PROJECT_NAME}_SRCS)
-# set(${PROJECT_NAME}_HDRS)
-
-### Additional static libraries to include in the target.
-# set(${PROJECT_NAME}_LIBS)
+#        LANGUAGES C CXX
+#        VERSION "0.1"
+#        DESCRIPTION "Program for logging sensor data to sd card.")
 
 ### Main sketch file
-set(${PROJECT_NAME}_SKETCH src/arduino_sketch.ino)
+# set(${PROJECT_NAME}_SKETCH src/arduino_sketch.ino)
 
 ### Add project directories into the build
 add_subdirectory(src)
+
+#### Additional settings for programmer. From programmers.txt
+set(${PROJECT_NAME}_PROGRAMMER avrisp)
+set(${PROJECT_NAME}_PORT /dev/ttyS3)
+set(uno.upload.speed 9600)
 
 ### Additional settings to add non-standard or your own Arduino libraries.
 # For this example (libs will contain additional arduino libraries)
@@ -28,15 +30,8 @@ add_subdirectory(src)
 # For nested library sources replace ${LIB_NAME} with library name for each library
 # set(_RECURSE true)
 
-#### Additional settings for programmer. From programmers.txt
-set(${PROJECT_NAME}_PROGRAMMER avrisp)
-set(${PROJECT_NAME}_PORT COM3)
-set(uno.upload.speed 9600)
-
 ## Verbose build process
 # set(${PROJECT_NAME}_AFLAGS -v)
-
-generate_arduino_firmware(${PROJECT_NAME})
 
 
 print_board_list()

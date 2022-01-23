@@ -8,7 +8,8 @@ class Executor:
     @staticmethod
     def __get_file(path: str):
         from pathlib import Path
-        return Path(path).stem + '.hex'
+        path_obj = Path(path)
+        return path_obj.parent, path_obj.stem + '.hex'
 
     @staticmethod
     def upload(
@@ -28,11 +29,12 @@ class Executor:
             number: str = None,
             logfile: str = None
     ):
-        sanitized_file = Executor.__get_file(file)
+        path, sanitized_file = Executor.__get_file(file)
+        print(path)
         print(sanitized_file)
         process = subprocess.Popen(
             ['avrdude', f'-c{programmer}', f'-p{partno}', f'-P{port}', f'-U{memtype}:{mode}:{sanitized_file}'],
-            cwd='./build',
+            cwd=f'./{path}',
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
             )

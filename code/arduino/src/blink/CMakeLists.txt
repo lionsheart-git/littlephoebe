@@ -6,7 +6,7 @@ set(ARDUINO_DEFAULT_BOARD arduino) # Default Board ID, when not specified
 set(ARDUINO_DEFAULT_PORT /dev/ttyS3) # Default Port, when not specified
 
 #====================================================================#
-# Advanced static library exmaple
+# Advanced static library example
 #====================================================================#
 generate_arduino_library(blink_lib
         SRCS blink_lib.cpp
@@ -24,7 +24,7 @@ generate_arduino_library(blink_lib
 
 
 #====================================================================#
-# Advanced firwmare example
+# Advanced firmware example
 #====================================================================#
 generate_arduino_firmware(blink
         SRCS blink.cpp

@@ -37,3 +37,5 @@ generate_arduino_firmware(blink
 #set(blink_BOARD uno)
 #
 #generate_arduino_firmware(blink)
+
+target_include_directories(blink_lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

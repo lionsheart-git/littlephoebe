@@ -37,7 +37,7 @@ class Executor:
             cwd=f'./{path}',
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
-            )
+        )
         stdout, stderr = process.communicate()
         print(stdout.decode())
         print(stderr.decode())
@@ -119,6 +119,24 @@ def __parse_args():
         help='Upload a hex file to the arduino uno.'
     )
 
+    # Parser for uploading a hex to the arduino
+    sp = subparser.add_parser(
+        'library',
+        help='Operations for working with arduino libraries.'
+    )
+    sp.set_defaults(cmd='library')
+    library_subparser = sp.add_subparsers(required=True)
+    lssp = library_subparser.add_parser(
+        'index',
+        help='Index all libraries in a subdirectory'
+    )
+    lssp.add_argument(
+        'target',
+        metavar='DIRECTORY',
+        type=str,
+        help='Directory to search in'
+    )
+
     return parser.parse_args()
 
 
@@ -132,6 +150,9 @@ def main():
     if args.cmd == 'upload' or args.cmd == 'all':
         print(f'Uploading {args.target}')
         Executor.upload(args.target)
+
+    if args.cmd == 'library':
+        print('Library')
 
 
 if __name__ == '__main__':

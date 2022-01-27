@@ -6,7 +6,7 @@ generate_arduino_firmware(RocketDataLogger
         LIBS blink_lib
         BOARD uno)
 
-target_link_libraries(RocketDataLogger blink_lib)
+target_link_libraries(RocketDataLogger blink_lib Adafruit_GFX_lib)
 
 
 # If simple blink is needed to verify connection or cmake

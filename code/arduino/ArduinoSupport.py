@@ -49,18 +49,21 @@ def __parse_args():
         help='Upload a hex file to the arduino uno.'
     )
 
-    # Parser for uploading a hex to the arduino
-    sp = subparser.add_parser(
+    # Parser for working with libraries a hex to the arduino
+    from pyarduino_helper.Library import Library
+    parser_library = subparser.add_parser(
         'library',
         help='Operations for working with arduino libraries.'
     )
-    sp.set_defaults(cmd='library')
-    library_subparser = sp.add_subparsers(required=True)
-    lssp = library_subparser.add_parser(
+    parser_library.set_defaults(cmd='library')
+
+    subparser_library = parser_library.add_subparsers(required=True)
+    parser_index = subparser_library.add_parser(
         'index',
         help='Index all libraries in a subdirectory'
     )
-    lssp.add_argument(
+    parser_index.set_defaults(func=Library.index)
+    parser_index.add_argument(
         'target',
         metavar='DIRECTORY',
         type=str,

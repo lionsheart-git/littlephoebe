@@ -17,12 +17,12 @@ def __parse_args():
     )
 
     # Parser for compiling and uploading in one step
-    sp = subparser.add_parser(
+    parser_all = subparser.add_parser(
         'all',
         help='Compile and upload a file to the arduino.'
     )
-    sp.set_defaults(cmd='all')
-    sp.add_argument(
+    parser_all.set_defaults(cmd='all')
+    parser_all.add_argument(
         'target',
         metavar='HEX',
         type=str,
@@ -30,19 +30,19 @@ def __parse_args():
     )
 
     # Parser for compiling a sketch
-    sp = subparser.add_parser(
+    parser_compile = subparser.add_parser(
         'compile',
         help='Compiles the cmake in the current directory.'
     )
-    sp.set_defaults(cmd='compile')
+    parser_compile.set_defaults(cmd='compile')
 
     # Parser for uploading a hex to the arduino
-    sp = subparser.add_parser(
+    parser_upload = subparser.add_parser(
         'upload',
         help='Upload a file to the arduino.'
     )
-    sp.set_defaults(cmd='upload')
-    sp.add_argument(
+    parser_upload.set_defaults(cmd='upload')
+    parser_upload.add_argument(
         'target',
         metavar='HEX',
         type=str,

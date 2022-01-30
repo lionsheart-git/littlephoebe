@@ -61,6 +61,7 @@ class Library:
             print(f'{os.path.basename(root)} subdirectories:')
             for subd in subdirectories:
                 print(subd)
+            return True
         # import os
         # for root, dirs, files in os.walk(path):
         #     if 'library.properties' in files and 'CMakeLists.txt' not in files:

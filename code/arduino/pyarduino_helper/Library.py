@@ -69,8 +69,11 @@ class Library:
         headers, sources = Library.__collect_headers_sources(path)
 
         print(f'Creating library in {path}')
-        print(f'Headers: {Library.__list_to_string(headers)}\n',
-              f'Sources: {Library.__list_to_string(sources)}')
+
+        from pyarduino_helper.Cmake import CMakeLists
+        library = CMakeLists(os.path.basename(path), path, 'w')
+        library.generate_arduino_library(Library.__list_to_string(headers), Library.__list_to_string(sources))
+        library.target_include_directory()
 
     @staticmethod
     def index(path: str):
@@ -91,26 +94,9 @@ class Library:
 
         if subdirectories:
             print(f'{os.path.basename(root)} subdirectories:')
-            for subdir in subdirectories:
-                print(subdir)
+
+            from pyarduino_helper.Cmake import CMakeLists
+            library = CMakeLists(os.path.basename(path), path, 'w')
+            library.add_subdirectories(subdirectories)
+
             return True
-        # import os
-        # for root, dirs, files in os.walk(path):
-        #     if 'library.properties' in files and 'CMakeLists.txt' not in files:
-        #         lib_name = os.path.basename(root)
-        #         sources = glob.glob('*.c[pp]')
-        #         headers = glob.glob('*.h')
-        #         for dir in dirs:
-        #             print(f'add_subdirectory({dir})')
-        #         print(
-        #             f'generate_arduino_library({lib_name}\n'
-        #             f'SRCS {Library.__list_to_string(sources)}\n'
-        #             f'HDRS {Library.__list_to_string(headers)}\n)'
-        #         )
-        #         print(f'target_include_directories({lib_name} PUBLIC ${{CMAKE_CURRENT_SOURCE_DIR}})')
-        # with open(f'{root}{os.sep}CMakeLists.txt', 'w') as file:
-        # file.write(f'target_include_directories({lib_name} PUBLIC ${{CMAKE_CURRENT_SOURCE_DIR}})')
-        # path = root.split(os.sep)
-        # print((len(path) - 1) * '  ', os.path.basename(root), '/')
-        # for file in files:
-        #     print(len(path) * '  ', file)

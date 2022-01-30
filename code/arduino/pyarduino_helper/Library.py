@@ -16,9 +16,14 @@ class Library:
         return ' '.join(str(elem) for elem in lis)
 
     @staticmethod
-    def __filter_list(lis: list, regex: str) -> list:
+    def __filter_not_list(lis: list, regex: str) -> list:
         regex = re.compile(regex)
         return [i for i in lis if not regex.search(i)]
+
+    @staticmethod
+    def __filter_list(lis: list, regex: str) -> list:
+        regex = re.compile(regex)
+        return [i for i in lis if regex.search(i)]
 
     @staticmethod
     def __filter_header(lis: list) -> list:

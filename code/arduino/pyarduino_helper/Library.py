@@ -91,8 +91,8 @@ class Library:
 
         if subdirectories:
             print(f'{os.path.basename(root)} subdirectories:')
-            for subd in subdirectories:
-                print(subd)
+            for subdir in subdirectories:
+                print(subdir)
             return True
         # import os
         # for root, dirs, files in os.walk(path):

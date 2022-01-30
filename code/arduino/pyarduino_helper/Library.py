@@ -44,8 +44,33 @@ class Library:
             return dirpath, dirnames, filenames
 
     @staticmethod
-    def __create_library(root: str, dirs: list, files: list):
-        print(f'Creating library in {root}')
+    def __collect_headers_sources(path: str):
+        root, dirs, files = Library.__root_dirs_files(path)
+
+        # Filter header and sources from files
+        headers = Library.__filter_list(files, r"\.hp{,2}$")
+        sources = Library.__filter_list(files, r"\.cp{,2}$")
+
+        for directory in dirs:
+            sub_headers, sub_sources = Library.__collect_headers_sources(f'{root}{os.sep}{directory}')
+
+            for header in sub_headers:
+                headers.append(f'{directory}{os.sep}{header}')
+
+            for source in sub_sources:
+                sources.append(f'{directory}{os.sep}{source}')
+
+        if headers or sources:
+            return headers, sources
+
+    @staticmethod
+    def __create_library(path: str):
+
+        headers, sources = Library.__collect_headers_sources(path)
+
+        print(f'Creating library in {path}')
+        print(f'Headers: {Library.__list_to_string(headers)}\n',
+              f'Sources: {Library.__list_to_string(sources)}')
 
     @staticmethod
     def index(path: str):
@@ -57,7 +82,7 @@ class Library:
 
         if 'library.properties' in files:
             if 'CMakeLists.txt' not in files:
-                Library.__create_library(root, dirs, files)
+                Library.__create_library(root)
             return True
         else:
             for directory in dirs:

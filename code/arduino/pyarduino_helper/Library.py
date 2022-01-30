@@ -33,11 +33,13 @@ class Library:
     def __root_dirs_files(path: str) -> (str, list, list):
         from os import walk
 
-        f = []
         for (dirpath, dirnames, filenames) in walk(path):
-            # Try to filter test and example directories
-            dirnames = Library.__filter_list(dirnames, r'.*test*')
-            dirnames = Library.__filter_list(dirnames, r'.*example*')
+            # Try to filter test, example and hidden directories
+            dirnames = Library.__filter_not_list(dirnames, r'.*test.*')
+            dirnames = Library.__filter_not_list(dirnames, r'.*example.*')
+            dirnames = Library.__filter_not_list(dirnames, r'\..*')
+            dirnames = Library.__filter_not_list(dirnames, r'.*extra.*')
+            dirnames = Library.__filter_not_list(dirnames, r'.*build.*')
 
             return dirpath, dirnames, filenames
 

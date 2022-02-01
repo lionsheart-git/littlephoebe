@@ -1,1 +1,1 @@
-add_subdirectory(senseBoxMCU-core)
+add_subdirectory(arduino-core)

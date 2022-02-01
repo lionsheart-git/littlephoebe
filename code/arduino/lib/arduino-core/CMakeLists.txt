@@ -1,0 +1,5 @@
+add_subdirectory(EEPROM)
+add_subdirectory(HID)
+add_subdirectory(SoftwareSerial)
+add_subdirectory(SPI)
+add_subdirectory(Wire)

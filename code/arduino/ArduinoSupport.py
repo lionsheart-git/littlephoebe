@@ -1,75 +1,5 @@
 #!/usr/bin/env python3
 
-import subprocess
-
-
-class Executor:
-
-    @staticmethod
-    def __get_file(path: str):
-        from pathlib import Path
-        path_obj = Path(path)
-        return path_obj.parent, path_obj.stem + '.hex'
-
-    @staticmethod
-    def upload(
-            file: str,
-            programmer: str = 'arduino',
-            partno: str = 'ATMEGA328p',
-            port: str = '/dev/ttyS3',
-            memtype: str = 'flash',
-            mode: str = 'w',
-            baudrate: str = None,
-            bitclock: str = None,
-            config: str = None,
-            delay: str = None,
-            format: str = None,
-            exitspec: str = None,
-            extended_param: str = None,
-            number: str = None,
-            logfile: str = None
-    ):
-        path, sanitized_file = Executor.__get_file(file)
-        print(path)
-        print(sanitized_file)
-        process = subprocess.Popen(
-            ['avrdude', f'-c{programmer}', f'-p{partno}', f'-P{port}', f'-U{memtype}:{mode}:{sanitized_file}'],
-            cwd=f'./{path}',
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE
-            )
-        stdout, stderr = process.communicate()
-        print(stdout.decode())
-        print(stderr.decode())
-
-    @staticmethod
-    def run_cmake():
-        process = subprocess.Popen(['cmake', '..'],
-                                   cwd='./build',
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE
-                                   )
-        stdout, stderr = process.communicate()
-        print(stdout.decode())
-        print(stderr.decode())
-
-    @staticmethod
-    def run_make():
-        process = subprocess.Popen(['make'],
-                                   cwd='./build',
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE
-                                   )
-        stdout, stderr = process.communicate()
-        print(stdout.decode())
-        print(stderr.decode())
-
-    @staticmethod
-    def compile():
-        Executor.run_cmake()
-        Executor.run_make()
-
-
 def __parse_args():
     import argparse
 
@@ -87,12 +17,12 @@ def __parse_args():
     )
 
     # Parser for compiling and uploading in one step
-    sp = subparser.add_parser(
+    parser_all = subparser.add_parser(
         'all',
         help='Compile and upload a file to the arduino.'
     )
-    sp.set_defaults(cmd='all')
-    sp.add_argument(
+    parser_all.set_defaults(cmd='all')
+    parser_all.add_argument(
         'target',
         metavar='HEX',
         type=str,
@@ -100,23 +30,44 @@ def __parse_args():
     )
 
     # Parser for compiling a sketch
-    sp = subparser.add_parser(
+    parser_compile = subparser.add_parser(
         'compile',
         help='Compiles the cmake in the current directory.'
     )
-    sp.set_defaults(cmd='compile')
+    parser_compile.set_defaults(cmd='compile')
 
     # Parser for uploading a hex to the arduino
-    sp = subparser.add_parser(
+    parser_upload = subparser.add_parser(
         'upload',
         help='Upload a file to the arduino.'
     )
-    sp.set_defaults(cmd='upload')
-    sp.add_argument(
+    parser_upload.set_defaults(cmd='upload')
+    parser_upload.add_argument(
         'target',
         metavar='HEX',
         type=str,
         help='Upload a hex file to the arduino uno.'
+    )
+
+    # Parser for working with libraries a hex to the arduino
+    from pyarduino_helper.Library import Library
+    parser_library = subparser.add_parser(
+        'library',
+        help='Operations for working with arduino libraries.'
+    )
+    parser_library.set_defaults(cmd='library')
+
+    subparser_library = parser_library.add_subparsers(required=True)
+    parser_index = subparser_library.add_parser(
+        'index',
+        help='Index all libraries in a subdirectory'
+    )
+    parser_index.set_defaults(func=Library.index)
+    parser_index.add_argument(
+        'target',
+        metavar='DIRECTORY',
+        type=str,
+        help='Directory to search in'
     )
 
     return parser.parse_args()
@@ -126,12 +77,18 @@ def main():
     args = __parse_args()
 
     if args.cmd == 'compile' or args.cmd == 'all':
+        from pyarduino_helper.Executor import Executor
         print('Compile')
         Executor.compile()
 
     if args.cmd == 'upload' or args.cmd == 'all':
+        from pyarduino_helper.Executor import Executor
         print(f'Uploading {args.target}')
         Executor.upload(args.target)
+
+    if args.cmd == 'library':
+        print('Library')
+        args.func(args.target)
 
 
 if __name__ == '__main__':

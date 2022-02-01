@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8.4)
+cmake_minimum_required(VERSION 3.16)
 set(CMAKE_TOOLCHAIN_FILE ${CMAKE_SOURCE_DIR}/cmake/ArduinoToolchain.cmake)
 set(CMAKE_CXX_STANDARD 14)
 set(PROJECT_NAME RocketDataLogger)
@@ -16,6 +16,7 @@ project(${PROJECT_NAME})
 
 ### Add project directories into the build
 add_subdirectory(src)
+add_subdirectory(lib)
 
 #### Additional settings for programmer. From programmers.txt
 set(${PROJECT_NAME}_PROGRAMMER avrisp)

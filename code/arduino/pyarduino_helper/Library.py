@@ -40,6 +40,7 @@ class Library:
             dirnames = Library.__filter_not_list(dirnames, r'\..*')
             dirnames = Library.__filter_not_list(dirnames, r'.*extra.*')
             dirnames = Library.__filter_not_list(dirnames, r'.*build.*')
+            dirnames = Library.__filter_not_list(dirnames, r'.*doc.*')
 
             return dirpath, dirnames, filenames
 

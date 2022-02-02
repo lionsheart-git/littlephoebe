@@ -27,6 +27,8 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 #include <compat/twi.h>
+#include <stdbool.h>
+
 #include "Arduino.h" // for digitalWrite and micros
 
 #ifndef cbi

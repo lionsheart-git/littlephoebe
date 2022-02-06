@@ -1,0 +1,4 @@
+Material Dichte
+Aluminium 2,7 g/cm^3
+Glasfaser 2,6 g/cm^3
+CFK 1,6 g/cm^3

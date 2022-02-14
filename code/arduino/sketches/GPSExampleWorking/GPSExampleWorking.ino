@@ -16,7 +16,7 @@ SoftwareSerial ss(RXPin, TXPin);
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(9600);
   ss.begin(GPSBaud);
 
   Serial.println(F("DeviceExample.ino"));

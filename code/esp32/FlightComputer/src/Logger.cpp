@@ -2,11 +2,10 @@
 #include <cstring>
 #include <cstdio>
 
-// #include <esp32-hal-log.h>
 #include <esp_attr.h>
+#include <malloc.h>
 
 #include "Logger.hpp"
-#include "esp32/tools/sdk/include/newlib/malloc.h"
 
 uart_t * uart0_ = uartBegin(0, 115200, SERIAL_8N1, 3, 1, 0, false);
 

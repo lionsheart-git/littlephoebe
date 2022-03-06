@@ -19,6 +19,8 @@ public:
     static void DeleteFile(FS &fs, const char *path);
     static void TestFileIO(FS &fs, const char *path);
     static void Begin();
+
+    static bool initSuccessful;
 };
 
 

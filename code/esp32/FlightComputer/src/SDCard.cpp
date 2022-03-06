@@ -6,10 +6,7 @@
 #include "PinConfiguration.hpp"
 #include "Logger.hpp"
 
-SDCard::SDCard()
-{
-
-}
+bool SDCard::initSuccessful = false;
 
 void SDCard::Begin() {
     SPI.begin(SD_SCK, SD_MISO, SD_MOSI, SD_CS);
@@ -17,6 +14,7 @@ void SDCard::Begin() {
     if (!SD.begin(SD_CS))
     {
         fclog_e("Card Mount Failed");
+        return;
     }
 
     uint8_t cardType = SD.cardType();
@@ -24,7 +22,10 @@ void SDCard::Begin() {
     if (cardType == CARD_NONE)
     {
         fclog_e("No SD card attached");
+        return;
     }
+
+    initSuccessful = true;
 }
 
 void SDCard::ListDir(fs::FS &fs, const char *dirname, uint8_t levels)

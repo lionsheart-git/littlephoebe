@@ -4,11 +4,13 @@
 #include <SD.h>
 
 #include "PinConfiguration.hpp"
-#include "Logger.hpp"
+#include "Logging/Logger.hpp"
+using Logging::Logger;
 
 bool SDCard::initSuccessful = false;
 
-void SDCard::Begin() {
+void SDCard::Begin()
+{
     SPI.begin(SD_SCK, SD_MISO, SD_MOSI, SD_CS);
 
     if (!SD.begin(SD_CS))

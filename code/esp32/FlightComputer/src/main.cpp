@@ -6,7 +6,9 @@
 
 #include "heltec.h"
 
-#include "Logger.hpp"
+#include "Logging/Logger.hpp"
+using Logging::Logger;
+
 #include "PinConfiguration.hpp"
 #include "SDCard.hpp"
 
@@ -33,11 +35,14 @@ void setup()
     Heltec.display->setFont(ArialMT_Plain_10);
 
     Serial.println(F("An extensive example of many interesting TinyGPS++ features"));
-    fclog_i("%s %s %s", "Testing TinyGPS++ library v.", TinyGPSPlus::libraryVersion(),"by Mikal Hart");
+    fclog_i("%s %s %s", "Testing TinyGPS++ library v.", TinyGPSPlus::libraryVersion(), "by Mikal Hart");
     Serial.println();
-    Serial.println(F("Sats HDOP  Latitude   Longitude   Fix  Date       Time     Date Alt    Course Speed Card  Distance Course Card  Chars Sentences Checksum"));
-    Serial.println(F("           (deg)      (deg)       Age                      Age  (m)    --- from GPS ----  ---- to London  ----  RX    RX        Fail"));
-    Serial.println(F("----------------------------------------------------------------------------------------------------------------------------------------"));
+    Serial.println(
+            F("Sats HDOP  Latitude   Longitude   Fix  Date       Time     Date Alt    Course Speed Card  Distance Course Card  Chars Sentences Checksum"));
+    Serial.println(
+            F("           (deg)      (deg)       Age                      Age  (m)    --- from GPS ----  ---- to London  ----  RX    RX        Fail"));
+    Serial.println(
+            F("----------------------------------------------------------------------------------------------------------------------------------------"));
 }
 
 // This custom version of delay() ensures that the gps object
@@ -52,14 +57,15 @@ static void smartDelay(unsigned long ms)
     } while (millis() - start < ms);
 }
 
-static void showDateTime(TinyGPSDate &d, TinyGPSTime &t, OLEDDISPLAY_TEXT_ALIGNMENT alignment, const uint8_t * font, int posX, int posY)
+static void
+showDateTime(TinyGPSDate &d, TinyGPSTime &t, OLEDDISPLAY_TEXT_ALIGNMENT alignment, const uint8_t *font, int posX,
+             int posY)
 {
     char sd[20];
     if (d.isValid())
     {
         snprintf(sd, sizeof(sd), "%02d/%02d/%02d ", d.month(), d.day(), d.year());
-    }
-    else
+    } else
     {
         snprintf(sd, sizeof(sd), "INV date");
     }
@@ -68,13 +74,12 @@ static void showDateTime(TinyGPSDate &d, TinyGPSTime &t, OLEDDISPLAY_TEXT_ALIGNM
     if (t.isValid())
     {
         snprintf(st, sizeof(st), "%02d:%02d:%02d", t.hour(), t.minute(), t.second());
-    }
-    else
+    } else
     {
         snprintf(st, sizeof(st), "INV time");
     }
 
-    strncat (sd, st, sizeof(sd) - strlen(sd) - 1);
+    strncat(sd, st, sizeof(sd) - strlen(sd) - 1);
 
     Heltec.display->setTextAlignment(alignment);
     Heltec.display->setFont(font);
@@ -83,14 +88,14 @@ static void showDateTime(TinyGPSDate &d, TinyGPSTime &t, OLEDDISPLAY_TEXT_ALIGNM
     smartDelay(0);
 }
 
-static void showFloat(float val, bool valid, char const * prefix, int prec, OLEDDISPLAY_TEXT_ALIGNMENT alignment, const uint8_t * font, int posX, int posY)
+static void showFloat(float val, bool valid, char const *prefix, int prec, OLEDDISPLAY_TEXT_ALIGNMENT alignment,
+                      const uint8_t *font, int posX, int posY)
 {
     char s[32];
     if (valid)
     {
         snprintf(s, sizeof(s), "%s %.*f", prefix, prec, val);
-    }
-    else
+    } else
     {
         snprintf(s, sizeof(s), "%s INV", prefix);
     }
@@ -102,14 +107,15 @@ static void showFloat(float val, bool valid, char const * prefix, int prec, OLED
     smartDelay(0);
 }
 
-static void showInt(int val, bool valid, char const * prefix, OLEDDISPLAY_TEXT_ALIGNMENT alignment, const uint8_t * font, int posX, int posY)
+static void
+showInt(int val, bool valid, char const *prefix, OLEDDISPLAY_TEXT_ALIGNMENT alignment, const uint8_t *font, int posX,
+        int posY)
 {
     char s[32];
     if (valid)
     {
         snprintf(s, sizeof(s), "%s %i", prefix, val);
-    }
-    else
+    } else
     {
         snprintf(s, sizeof(s), "%s INV", prefix);
     }
@@ -126,14 +132,13 @@ static void printFloat(float val, bool valid, int len, int prec)
         while (len-- > 1)
             Serial.print('*');
         Serial.print(' ');
-    }
-    else
+    } else
     {
         Serial.print(val, prec);
-        int vi = abs((int)val);
+        int vi = abs((int) val);
         int flen = prec + (val < 0.0 ? 2 : 1); // . and -
         flen += vi >= 1000 ? 4 : vi >= 100 ? 3 : vi >= 10 ? 2 : 1;
-        for (int i=flen; i<len; ++i)
+        for (int i = flen; i < len; ++i)
             Serial.print(' ');
     }
     smartDelay(0);
@@ -145,10 +150,10 @@ static void printInt(unsigned long val, bool valid, int len)
     if (valid)
         sprintf(sz, "%ld", val);
     sz[len] = 0;
-    for (int i=strlen(sz); i<len; ++i)
+    for (int i = strlen(sz); i < len; ++i)
         sz[i] = ' ';
     if (len > 0)
-        sz[len-1] = ' ';
+        sz[len - 1] = ' ';
     Serial.print(sz);
     smartDelay(0);
 }
@@ -158,8 +163,7 @@ static void printDateTime(TinyGPSDate &d, TinyGPSTime &t)
     if (!d.isValid())
     {
         Serial.print(F("********** "));
-    }
-    else
+    } else
     {
         char sz[32];
         sprintf(sz, "%02d/%02d/%02d ", d.month(), d.day(), d.year());
@@ -169,8 +173,7 @@ static void printDateTime(TinyGPSDate &d, TinyGPSTime &t)
     if (!t.isValid())
     {
         Serial.print(F("******** "));
-    }
-    else
+    } else
     {
         char sz[32];
         sprintf(sz, "%02d:%02d:%02d ", t.hour(), t.minute(), t.second());
@@ -184,8 +187,8 @@ static void printDateTime(TinyGPSDate &d, TinyGPSTime &t)
 static void printStr(const char *str, int len)
 {
     size_t slen = strlen(str);
-    for (int i=0; i<len; ++i)
-        Serial.print(i<slen ? str[i] : ' ');
+    for (int i = 0; i < len; ++i)
+        Serial.print(i < slen ? str[i] : ' ');
     smartDelay(0);
 }
 
@@ -195,12 +198,13 @@ void loop()
     // clear the display
     Heltec.display->clear();
 
-    if (millis() > 5000 && gps.charsProcessed() < 10) {
+    if (millis() > 5000 && gps.charsProcessed() < 10)
+    {
         Serial.println(F("No GPS data received: check wiring"));
         Heltec.display->setTextAlignment(TEXT_ALIGN_CENTER);
         Heltec.display->drawStringMaxWidth(64, 16, 128, F("No GPS data received: check wiring"));
-    }
-    else {
+    } else
+    {
         //Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
         //Heltec.display->setFont(ArialMT_Plain_10);
         //Heltec.display->drawString(0, 0, "Sat: 5");
@@ -245,7 +249,7 @@ void loop()
         printStr(gps.course.isValid() ? TinyGPSPlus::cardinal(gps.course.deg()) : "*** ", 6);
 
         unsigned long distanceKmToLondon =
-                (unsigned long)TinyGPSPlus::distanceBetween(
+                (unsigned long) TinyGPSPlus::distanceBetween(
                         gps.location.lat(),
                         gps.location.lng(),
                         LONDON_LAT,

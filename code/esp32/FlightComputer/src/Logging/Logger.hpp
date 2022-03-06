@@ -2,6 +2,11 @@
 #ifndef FLIGHTCOMPUTER_LOGGER_HPP
 #define FLIGHTCOMPUTER_LOGGER_HPP
 
+#include <esp32-hal-uart.h>
+
+namespace Logging
+{
+
 #define FC_LOG_LEVEL_NONE       (0)
 #define FC_LOG_LEVEL_ERROR      (1)
 #define FC_LOG_LEVEL_WARN       (2)
@@ -67,14 +72,13 @@
 #define fclog_n(format, ...)
 #endif
 
-#include <esp32-hal-uart.h>
+    class Logger
+    {
+    public:
+        static int log(const char *path, const char *format, ...);
+        static char const *PathToFileName(const char *path);
+    };
 
-class Logger
-{
-public:
-    static int log(const char * path, const char *format, ...);
-    static char const * PathToFileName(const char * path);
-};
-
+}
 
 #endif //FLIGHTCOMPUTER_LOGGER_HPP

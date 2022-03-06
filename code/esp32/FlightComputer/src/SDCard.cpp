@@ -108,7 +108,7 @@ void SDCard::ReadFile(fs::FS &fs, const char *path)
 
 void SDCard::WriteFile(fs::FS &fs, const char *path, const char *message)
 {
-    fclog_d("Writing file: %s", path);
+//     fclog_d("Writing file: %s", path);
 
     File file = fs.open(path, FILE_WRITE);
     if (!file)
@@ -118,7 +118,7 @@ void SDCard::WriteFile(fs::FS &fs, const char *path, const char *message)
     }
     if (file.print(message))
     {
-        fclog_i("File %s written.", path);
+//         fclog_i("File %s written.", path);
     } else
     {
         fclog_e("Write file %s message %s failed.", path, message);
@@ -128,7 +128,7 @@ void SDCard::WriteFile(fs::FS &fs, const char *path, const char *message)
 
 void SDCard::AppendFile(fs::FS &fs, const char *path, const char *message)
 {
-    fclog_d("Appending to file: %s", path);
+//    fclog_d("Appending to file: %s", path);
 
     File file = fs.open(path, FILE_APPEND);
     if (!file)
@@ -138,7 +138,7 @@ void SDCard::AppendFile(fs::FS &fs, const char *path, const char *message)
     }
     if (file.print(message))
     {
-        fclog_i("Message %s appended to %s.", path, message);
+//        fclog_i("Message %s appended to %s.", path, message);
     } else
     {
         fclog_e("Append %s to %s failed.", message, path);

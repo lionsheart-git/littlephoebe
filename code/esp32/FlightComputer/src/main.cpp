@@ -1,15 +1,18 @@
+#include <Arduino.h>
+
 #include <TinyGPS++.h>
 #include <SoftwareSerial.h>
+#include <sys/time.h>
 
-#include <Arduino.h>
 #include "heltec.h"
 
-#include <SPI.h>
+#include "Logger.hpp"
+#include "PinConfiguration.hpp"
+#include "SDCard.hpp"
 
 static const int RXPin = 36, TXPin = 37;
 static const uint32_t GPSBaud = 9600;
 
-#include <esp32-hal-log.h>
 // The TinyGPS++ object
 TinyGPSPlus gps;
 
@@ -19,18 +22,18 @@ SoftwareSerial ss(RXPin, TXPin);
 
 void setup()
 {
-    // Serial.begin(115200);
-
-    //esp_log_set_vprintf(LogFunction);
+    // Init SD Card on correct SPI port.
+    SDCard::Begin();
+//
 
     ss.begin(GPSBaud);
 
-    Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Disable*/, true /*Serial Enable*/);
+    Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Disable*/, false /*Serial Enable*/);
     Heltec.display->flipScreenVertically();
     Heltec.display->setFont(ArialMT_Plain_10);
 
     Serial.println(F("An extensive example of many interesting TinyGPS++ features"));
-    log_i("Testing TinyGPS++ library v. ", TinyGPSPlus::libraryVersion()," by Mikal Hart");
+    fclog_i("%s %s %s", "Testing TinyGPS++ library v.", TinyGPSPlus::libraryVersion(),"by Mikal Hart");
     Serial.println();
     Serial.println(F("Sats HDOP  Latitude   Longitude   Fix  Date       Time     Date Alt    Course Speed Card  Distance Course Card  Chars Sentences Checksum"));
     Serial.println(F("           (deg)      (deg)       Age                      Age  (m)    --- from GPS ----  ---- to London  ----  RX    RX        Fail"));
@@ -271,5 +274,7 @@ void loop()
     // write the buffer to the display
     Heltec.display->display();
 
-    smartDelay(1000);
+    fclog_i("%ld", millis());
+
+    smartDelay(100);
 }

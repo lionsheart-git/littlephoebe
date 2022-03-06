@@ -39,7 +39,7 @@ const char * IRAM_ATTR Logger::PathToFileName(const char * path)
  * @param ...
  * @return
  */
-int Logger::log(const char *format, ...)
+int Logger::log(const char * path, const char *format, ...)
 {
     static char loc_buf[64];
     char * temp = loc_buf;

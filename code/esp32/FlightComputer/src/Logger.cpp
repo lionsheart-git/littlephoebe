@@ -6,8 +6,9 @@
 
 #include <esp_attr.h>
 #include <malloc.h>
+#include <SD.h>
 
-#include "Logger.hpp"
+#include "SDCard.hpp"
 
 uart_t * uart0_ = uartBegin(0, 115200, SERIAL_8N1, 3, 1, 0, false);
 
@@ -41,6 +42,7 @@ const char * IRAM_ATTR Logger::PathToFileName(const char * path)
  */
 int Logger::log(const char * path, const char *format, ...)
 {
+
     static char loc_buf[64];
     char * temp = loc_buf;
     int len;
@@ -58,8 +60,14 @@ int Logger::log(const char * path, const char *format, ...)
     }
     vsnprintf(temp, len+1, format, arg);
 
-    // Write to Serial (UART) and / or SDCard
+    // Write to Serial (UART)
     uartWriteBuf(uart0_, (uint8_t const *) temp, len);
+
+    // Write to SD Card
+    if (SDCard::initSuccessful)
+    {
+        SDCard::AppendFile(SD, path, temp);
+    }
 
     va_end(arg);
     if(len >= sizeof(loc_buf)){

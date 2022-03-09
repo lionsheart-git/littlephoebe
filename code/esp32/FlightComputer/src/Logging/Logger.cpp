@@ -1,3 +1,6 @@
+/**
+ * @file Logger.cpp
+ */
 #include "Logger.hpp"
 
 #include <cstdarg>

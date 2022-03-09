@@ -8,6 +8,8 @@
 
 bool SDCard::initSuccessful = false;
 
+//@todo Error handling if init not Successful
+
 void SDCard::Begin()
 {
     SPI.begin(SD_SCK, SD_MISO, SD_MOSI, SD_CS);

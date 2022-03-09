@@ -13,10 +13,8 @@
 namespace Logging
 {
 
-    uart_t *uart0_ = uartBegin(0, 115200, SERIAL_8N1, 3, 1, 0, false);
-
     /**
-     * Extracts only file from path given by __FILE__.
+     * @brief Extracts only file from path given by __FILE__.
      *
      * @param path Path of the file.
      * @return The file name.
@@ -39,13 +37,17 @@ namespace Logging
     }
 
     /**
-     * @brief Adaptation of log_printf from esp32-hal-log.h.
+     * @brief General log function that logs to serial and sd card.
      *
-     * @param format
-     * @param ...
-     * @return
+     * Adaptation of log_printf from esp32-hal-log.h.
+     *
+     * @param path Path to file on SD card.
+     * @param format Format string.
+     * @param ... Arguments for the format string.
+     *
+     * @return Length of resulting string written / printed.
      */
-    int Logger::log(const char *path, const char *format, ...)
+    int Logger::Log(const char *path, const char *format, ...)
     {
 
         static char loc_buf[64];
@@ -68,7 +70,7 @@ namespace Logging
         vsnprintf(temp, len + 1, format, arg);
 
         // Write to Serial (UART)
-        uartWriteBuf(uart0_, (uint8_t const *) temp, len);
+        printf("%s", temp);
 
         // Write to SD Card
         if (SDCard::initSuccessful)

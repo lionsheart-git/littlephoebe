@@ -1,8 +1,5 @@
-
 #ifndef FLIGHTCOMPUTER_LOGGER_HPP
 #define FLIGHTCOMPUTER_LOGGER_HPP
-
-#include <esp32-hal-uart.h>
 
 namespace Logging
 {
@@ -37,37 +34,37 @@ namespace Logging
 #endif
 
 #if FC_LOG_LEVEL >= FC_LOG_LEVEL_VERBOSE
-#define fclog_v(format, ...) Logger::log(FC_LOG_PATH, FC_LOG_FORMAT(V, format), ##__VA_ARGS__)
+#define fclog_v(format, ...) Logger::Log(FC_LOG_PATH, FC_LOG_FORMAT(V, format), ##__VA_ARGS__)
 #else
 #define fclog_v(format, ...)
 #endif
 
 #if FC_LOG_LEVEL >= FC_LOG_LEVEL_DEBUG
-#define fclog_d(format, ...) Logger::log(FC_LOG_PATH, FC_LOG_FORMAT(D, format), ##__VA_ARGS__)
+#define fclog_d(format, ...) Logger::Log(FC_LOG_PATH, FC_LOG_FORMAT(D, format), ##__VA_ARGS__)
 #else
 #define fclog_d(format, ...)
 #endif
 
 #if FC_LOG_LEVEL >= FC_LOG_LEVEL_INFO
-#define fclog_i(format, ...) Logger::log(FC_LOG_PATH, FC_LOG_FORMAT(I, format), ##__VA_ARGS__)
+#define fclog_i(format, ...) Logger::Log(FC_LOG_PATH, FC_LOG_FORMAT(I, format), ##__VA_ARGS__)
 #else
 #define fclog_i(format, ...)
 #endif
 
 #if FC_LOG_LEVEL >= FC_LOG_LEVEL_WARN
-#define fclog_w(format, ...) Logger::log(FC_LOG_PATH, FC_LOG_FORMAT(W, format), ##__VA_ARGS__)
+#define fclog_w(format, ...) Logger::Log(FC_LOG_PATH, FC_LOG_FORMAT(W, format), ##__VA_ARGS__)
 #else
 #define fclog_w(format, ...)
 #endif
 
 #if FC_LOG_LEVEL >= FC_LOG_LEVEL_ERROR
-#define fclog_e(format, ...) Logger::log(FC_LOG_PATH, FC_LOG_FORMAT(E, format), ##__VA_ARGS__)
+#define fclog_e(format, ...) Logger::Log(FC_LOG_PATH, FC_LOG_FORMAT(E, format), ##__VA_ARGS__)
 #else
 #define fclog_e(format, ...)
 #endif
 
 #if FC_LOG_LEVEL >= FC_LOG_LEVEL_NONE
-#define fclog_n(format, ...) Logger::log(FC_LOG_PATH, FC_LOG_FORMAT(N, format), ##__VA_ARGS__)
+#define fclog_n(format, ...) Logger::Log(FC_LOG_PATH, FC_LOG_FORMAT(N, format), ##__VA_ARGS__)
 #else
 #define fclog_n(format, ...)
 #endif
@@ -75,7 +72,7 @@ namespace Logging
     class Logger
     {
     public:
-        static int log(const char *path, const char *format, ...);
+        static int Log(const char *path, const char *format, ...);
         static char const *PathToFileName(const char *path);
     };
 

@@ -4,8 +4,7 @@
 #include <SD.h>
 
 #include "PinConfiguration.hpp"
-#include "Logging/Logger.hpp"
-using Logging::Logger;
+#include "Logging/SystemLogger.hpp"
 
 bool SDCard::initSuccessful = false;
 

@@ -6,8 +6,7 @@
 
 #include "heltec.h"
 
-#include "Logging/Logger.hpp"
-using Logging::Logger;
+#include "Logging/SystemLogger.hpp"
 
 #include "PinConfiguration.hpp"
 #include "SDCard.hpp"

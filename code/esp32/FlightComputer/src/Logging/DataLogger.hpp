@@ -40,7 +40,7 @@
  * Currently system time is used since the project has no Real Time Clock
  */
 #ifndef D_LOG_FORMAT//(letter, format)
-#define D_LOG_FORMAT(format) "[%ld] " format, millis()v
+#define D_LOG_FORMAT(format) "[%ld] " format, millis()
 #endif
 
 /**

@@ -7,6 +7,7 @@
 #include "heltec.h"
 
 #include "Logging/SystemLogger.hpp"
+#include "Logging/DataLogger.hpp"
 
 #include "PinConfiguration.hpp"
 #include "SDCard.hpp"
@@ -33,15 +34,13 @@ void setup()
     Heltec.display->flipScreenVertically();
     Heltec.display->setFont(ArialMT_Plain_10);
 
-    Serial.println(F("An extensive example of many interesting TinyGPS++ features"));
     slog_i("%s %s %s", "Testing TinyGPS++ library v.", TinyGPSPlus::libraryVersion(), "by Mikal Hart");
     Serial.println();
-    Serial.println(
-            F("Sats HDOP  Latitude   Longitude   Fix  Date       Time     Date Alt    Course Speed Card  Distance Course Card  Chars Sentences Checksum"));
-    Serial.println(
-            F("           (deg)      (deg)       Age                      Age  (m)    --- from GPS ----  ---- to London  ----  RX    RX        Fail"));
-    Serial.println(
-            F("----------------------------------------------------------------------------------------------------------------------------------------"));
+    dlogn("Sats HDOP  Latitude   Longitude   Fix  Date       Time     Date Alt    Course Speed Card  Distance Course Card  Chars Sentences Checksum");
+    dlogn(
+            "           (deg)      (deg)       Age                      Age  (m)    --- from GPS ----  ---- to London  ----  RX    RX        Fail");
+    dlogn(
+            "----------------------------------------------------------------------------------------------------------------------------------------");
 }
 
 // This custom version of delay() ensures that the gps object
@@ -129,16 +128,16 @@ static void printFloat(float val, bool valid, int len, int prec)
     if (!valid)
     {
         while (len-- > 1)
-            Serial.print('*');
-        Serial.print(' ');
+            dlogs("%c", '*');
+        dlogs("%c", ' ');
     } else
     {
-        Serial.print(val, prec);
+        dlogs("%f", val);
         int vi = abs((int) val);
         int flen = prec + (val < 0.0 ? 2 : 1); // . and -
         flen += vi >= 1000 ? 4 : vi >= 100 ? 3 : vi >= 10 ? 2 : 1;
         for (int i = flen; i < len; ++i)
-            Serial.print(' ');
+            dlogs("%c", ' ');
     }
     smartDelay(0);
 }
@@ -153,7 +152,7 @@ static void printInt(unsigned long val, bool valid, int len)
         sz[i] = ' ';
     if (len > 0)
         sz[len - 1] = ' ';
-    Serial.print(sz);
+    dlogs("%s", sz);
     smartDelay(0);
 }
 
@@ -161,22 +160,22 @@ static void printDateTime(TinyGPSDate &d, TinyGPSTime &t)
 {
     if (!d.isValid())
     {
-        Serial.print(F("********** "));
+        dlogs("%s", "********** ");
     } else
     {
         char sz[32];
         sprintf(sz, "%02d/%02d/%02d ", d.month(), d.day(), d.year());
-        Serial.print(sz);
+        dlogs("%s", sz);
     }
 
     if (!t.isValid())
     {
-        Serial.print(F("******** "));
+        dlogs("%s", "******** ");
     } else
     {
         char sz[32];
         sprintf(sz, "%02d:%02d:%02d ", t.hour(), t.minute(), t.second());
-        Serial.print(sz);
+        dlogs("%s", sz);
     }
 
     printInt(d.age(), d.isValid(), 5);
@@ -187,7 +186,7 @@ static void printStr(const char *str, int len)
 {
     size_t slen = strlen(str);
     for (int i = 0; i < len; ++i)
-        Serial.print(i < slen ? str[i] : ' ');
+        dlogs("%c", i < slen ? str[i] : ' ');
     smartDelay(0);
 }
 
@@ -199,11 +198,12 @@ void loop()
 
     if (millis() > 5000 && gps.charsProcessed() < 10)
     {
-        Serial.println(F("No GPS data received: check wiring"));
+        slog_e("No GPS data received: check wiring");
         Heltec.display->setTextAlignment(TEXT_ALIGN_CENTER);
-        Heltec.display->drawStringMaxWidth(64, 16, 128, F("No GPS data received: check wiring"));
+        Heltec.display->drawStringMaxWidth(64, 16, 128, "No GPS data received: check wiring");
     } else
     {
+        dlog("%c", ' ');
         //Heltec.display->setTextAlignment(TEXT_ALIGN_LEFT);
         //Heltec.display->setFont(ArialMT_Plain_10);
         //Heltec.display->drawString(0, 0, "Sat: 5");
@@ -271,8 +271,8 @@ void loop()
         printInt(gps.charsProcessed(), true, 6);
         printInt(gps.sentencesWithFix(), true, 10);
         printInt(gps.failedChecksum(), true, 9);
-        Serial.println();
     }
+    dlogsn("");
 
     // write the buffer to the display
     Heltec.display->display();

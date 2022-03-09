@@ -6,8 +6,7 @@
 class SDCard
 {
 public:
-    SDCard();
-    ~SDCard();
+    SDCard() = delete;
 
     static void ListDir(fs::FS &fs, const char *dirname, unsigned char levels);
     static void CreateDir(FS &fs, const char *path);

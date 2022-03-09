@@ -221,8 +221,3 @@ void SDCard::TestFileIO(fs::FS &fs, const char *path)
     slog_i("%u bytes written for %u ms.", 2048 * 512, end);
     file.close();
 }
-
-SDCard::~SDCard()
-{
-
-}

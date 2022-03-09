@@ -4,7 +4,6 @@
 #include "Logger.hpp"
 
 #include <cstdarg>
-#include <cstring>
 #include <cstdio>
 
 #include <esp_attr.h>

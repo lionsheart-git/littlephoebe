@@ -16,7 +16,7 @@ void SDCard::Begin()
 
     if (!SD.begin(SD_CS))
     {
-        fclog_e("Card Mount Failed");
+        slog_e("Card Mount Failed");
         return;
     }
 
@@ -24,7 +24,7 @@ void SDCard::Begin()
 
     if (cardType == CARD_NONE)
     {
-        fclog_e("No SD card attached");
+        slog_e("No SD card attached");
         return;
     }
 
@@ -33,17 +33,17 @@ void SDCard::Begin()
 
 void SDCard::ListDir(fs::FS &fs, const char *dirname, uint8_t levels)
 {
-    fclog_d("Listing directory: %s", dirname);
+    slog_d("Listing directory: %s", dirname);
 
     File root = fs.open(dirname);
     if (!root)
     {
-        fclog_e("Failed to open directory %s", dirname);
+        slog_e("Failed to open directory %s", dirname);
         return;
     }
     if (!root.isDirectory())
     {
-        fclog_e("Not a directory %s", dirname);
+        slog_e("Not a directory %s", dirname);
         return;
     }
 
@@ -52,15 +52,15 @@ void SDCard::ListDir(fs::FS &fs, const char *dirname, uint8_t levels)
     {
         if (file.isDirectory())
         {
-            fclog_i("  DIR : ");
-            fclog_i("%s", file.name());
+            slog_i("  DIR : ");
+            slog_i("%s", file.name());
             if (levels)
             {
                 ListDir(fs, file.name(), levels - 1);
             }
         } else
         {
-            fclog_i("  FILE: %s   SIZE: %u", file.name(), file.size());
+            slog_i("  FILE: %s   SIZE: %u", file.name(), file.size());
         }
         file = root.openNextFile();
     }
@@ -68,36 +68,36 @@ void SDCard::ListDir(fs::FS &fs, const char *dirname, uint8_t levels)
 
 void SDCard::CreateDir(fs::FS &fs, const char *path)
 {
-    fclog_d("Creating Dir: %s", path);
+    slog_d("Creating Dir: %s", path);
     if (fs.mkdir(path))
     {
-        fclog_i("Dir %s created", path);
+        slog_i("Dir %s created", path);
     } else
     {
-        fclog_e("mkdir %s failed", path);
+        slog_e("mkdir %s failed", path);
     }
 }
 
 void SDCard::RemoveDir(fs::FS &fs, const char *path)
 {
-    fclog_d("Removing Dir: %s.", path);
+    slog_d("Removing Dir: %s.", path);
     if (fs.rmdir(path))
     {
-        fclog_i("Dir %s removed", path);
+        slog_i("Dir %s removed", path);
     } else
     {
-        fclog_e("rmdir %s failed", path);
+        slog_e("rmdir %s failed", path);
     }
 }
 
 void SDCard::ReadFile(fs::FS &fs, const char *path)
 {
-    fclog_d("Reading file: %s.", path);
+    slog_d("Reading file: %s.", path);
 
     File file = fs.open(path);
     if (!file)
     {
-        fclog_e("Failed to open file %s for reading.", path);
+        slog_e("Failed to open file %s for reading.", path);
         return;
     }
 
@@ -111,65 +111,65 @@ void SDCard::ReadFile(fs::FS &fs, const char *path)
 
 void SDCard::WriteFile(fs::FS &fs, const char *path, const char *message)
 {
-//     fclog_d("Writing file: %s", path);
+//     slog_d("Writing file: %s", path);
 
     File file = fs.open(path, FILE_WRITE);
     if (!file)
     {
-        fclog_e("Failed to open file %s message %s for writing.", path, message);
+        slog_e("Failed to open file %s message %s for writing.", path, message);
         return;
     }
     if (file.print(message))
     {
-//         fclog_i("File %s written.", path);
+//         slog_i("File %s written.", path);
     } else
     {
-        fclog_e("Write file %s message %s failed.", path, message);
+        slog_e("Write file %s message %s failed.", path, message);
     }
     file.close();
 }
 
 void SDCard::AppendFile(fs::FS &fs, const char *path, const char *message)
 {
-//    fclog_d("Appending to file: %s", path);
+//    slog_d("Appending to file: %s", path);
 
     File file = fs.open(path, FILE_APPEND);
     if (!file)
     {
-        fclog_e("Failed to open file %s for appending %s.", path, message);
+        slog_e("Failed to open file %s for appending %s.", path, message);
         return;
     }
     if (file.print(message))
     {
-//        fclog_i("Message %s appended to %s.", path, message);
+//        slog_i("Message %s appended to %s.", path, message);
     } else
     {
-        fclog_e("Append %s to %s failed.", message, path);
+        slog_e("Append %s to %s failed.", message, path);
     }
     file.close();
 }
 
 void SDCard::RenameFile(fs::FS &fs, const char *path1, const char *path2)
 {
-    fclog_d("Renaming file %s to %s.", path1, path2);
+    slog_d("Renaming file %s to %s.", path1, path2);
     if (fs.rename(path1, path2))
     {
-        fclog_i("File %s renamed to %s.", path1, path2);
+        slog_i("File %s renamed to %s.", path1, path2);
     } else
     {
-        fclog_e("Rename %s to  %s failed.", path1, path2);
+        slog_e("Rename %s to  %s failed.", path1, path2);
     }
 }
 
 void SDCard::DeleteFile(fs::FS &fs, const char *path)
 {
-    fclog_d("Deleting file: %s.", path);
+    slog_d("Deleting file: %s.", path);
     if (fs.remove(path))
     {
-        fclog_i("File %s deleted.", path);
+        slog_i("File %s deleted.", path);
     } else
     {
-        fclog_e("Delete %s failed.", path);
+        slog_e("Delete %s failed.", path);
     }
 }
 
@@ -196,18 +196,18 @@ void SDCard::TestFileIO(fs::FS &fs, const char *path)
             len -= toRead;
         }
         end = millis() - start;
-        fclog_i("%u bytes read for %u ms.", flen, end);
+        slog_i("%u bytes read for %u ms.", flen, end);
         file.close();
     } else
     {
-        fclog_e("Failed to open file %s for reading.", path);
+        slog_e("Failed to open file %s for reading.", path);
     }
 
 
     file = fs.open(path, FILE_WRITE);
     if (!file)
     {
-        fclog_e("Failed to open file %s for writing.", path);
+        slog_e("Failed to open file %s for writing.", path);
         return;
     }
 
@@ -218,7 +218,7 @@ void SDCard::TestFileIO(fs::FS &fs, const char *path)
         file.write(buf, 512);
     }
     end = millis() - start;
-    fclog_i("%u bytes written for %u ms.", 2048 * 512, end);
+    slog_i("%u bytes written for %u ms.", 2048 * 512, end);
     file.close();
 }
 

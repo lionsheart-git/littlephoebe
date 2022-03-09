@@ -34,7 +34,7 @@ void setup()
     Heltec.display->setFont(ArialMT_Plain_10);
 
     Serial.println(F("An extensive example of many interesting TinyGPS++ features"));
-    fclog_i("%s %s %s", "Testing TinyGPS++ library v.", TinyGPSPlus::libraryVersion(), "by Mikal Hart");
+    slog_i("%s %s %s", "Testing TinyGPS++ library v.", TinyGPSPlus::libraryVersion(), "by Mikal Hart");
     Serial.println();
     Serial.println(
             F("Sats HDOP  Latitude   Longitude   Fix  Date       Time     Date Alt    Course Speed Card  Distance Course Card  Chars Sentences Checksum"));

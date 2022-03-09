@@ -30,7 +30,7 @@ void setup()
 
     ss.begin(GPSBaud);
 
-    Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Disable*/, false /*Serial Enable*/);
+    Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Disable*/, true /*Serial Enable*/);
     Heltec.display->flipScreenVertically();
     Heltec.display->setFont(ArialMT_Plain_10);
 
@@ -277,8 +277,6 @@ void loop()
 
     // write the buffer to the display
     Heltec.display->display();
-
-    fclog_i("%ld", millis());
 
     smartDelay(100);
 }

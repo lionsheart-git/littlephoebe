@@ -1,3 +1,7 @@
+/**
+ * @file SDCard.cpp
+ * @brief Contains @ref SDCard class
+ */
 #include "SDCard.hpp"
 
 #include <FS.h>
@@ -10,6 +14,11 @@ bool SDCard::initSuccessful = false;
 
 //@todo Error handling if init not Successful
 
+/**
+ * @brief Initializes the SD arduino library.
+ *
+ * Uses the SD_SCK, SD_MISO, SD_MOSI, SD_CS pins to set the correct SPI and the SD_CS for the SD library.
+ */
 void SDCard::Begin()
 {
     SPI.begin(SD_SCK, SD_MISO, SD_MOSI, SD_CS);
@@ -31,7 +40,14 @@ void SDCard::Begin()
     initSuccessful = true;
 }
 
-void SDCard::ListDir(fs::FS &fs, const char *dirname, uint8_t levels)
+/**
+ * @brief Lists files and directories of an directory.
+ *
+ * @param fs File system where the directory is located.
+ * @param dirname Path to directory on file system.
+ * @param levels Number of levels to recurse down if available.
+ */
+void SDCard::ListDir(FS &fs, const char *dirname, uint8_t levels)
 {
     slog_d("Listing directory: %s", dirname);
 
@@ -66,6 +82,12 @@ void SDCard::ListDir(fs::FS &fs, const char *dirname, uint8_t levels)
     }
 }
 
+/**
+ * @brief Creates an directory at given location.
+ *
+ * @param fs File system to create the directory on.
+ * @param path Path to directory.
+ */
 void SDCard::CreateDir(fs::FS &fs, const char *path)
 {
     slog_d("Creating Dir: %s", path);
@@ -78,6 +100,12 @@ void SDCard::CreateDir(fs::FS &fs, const char *path)
     }
 }
 
+/**
+ * @brief Removes a directory at given location.
+ *
+ * @param fs File system to remove the directory from.
+ * @param path Path on the file system to directory.
+ */
 void SDCard::RemoveDir(fs::FS &fs, const char *path)
 {
     slog_d("Removing Dir: %s.", path);
@@ -90,6 +118,12 @@ void SDCard::RemoveDir(fs::FS &fs, const char *path)
     }
 }
 
+/**
+ * @brief Reads bytes from a file.
+ *
+ * @param fs File system to read file from.
+ * @param path Path on the file system to file.
+ */
 void SDCard::ReadFile(fs::FS &fs, const char *path)
 {
     slog_d("Reading file: %s.", path);
@@ -109,6 +143,15 @@ void SDCard::ReadFile(fs::FS &fs, const char *path)
     file.close();
 }
 
+/**
+ * @brief Writes a message to given file.
+ *
+ * If not existent file is created. If file already exists content is overwritten.
+ *
+ * @param fs File system to write message to.
+ * @param path Path to file to write message in.
+ * @param message Message to write to file.
+ */
 void SDCard::WriteFile(fs::FS &fs, const char *path, const char *message)
 {
 //     slog_d("Writing file: %s", path);
@@ -129,6 +172,15 @@ void SDCard::WriteFile(fs::FS &fs, const char *path, const char *message)
     file.close();
 }
 
+/**
+ * @brief Appends a message to a file.
+ *
+ * If not existent, file is create. Otherwise message is appended to existing content.
+ *
+ * @param fs File system to append file on.
+ * @param path Path to file to append message to.
+ * @param message Message to append.
+ */
 void SDCard::AppendFile(fs::FS &fs, const char *path, const char *message)
 {
 //    slog_d("Appending to file: %s", path);
@@ -149,6 +201,13 @@ void SDCard::AppendFile(fs::FS &fs, const char *path, const char *message)
     file.close();
 }
 
+/**
+ * @brief Renames a file.
+ *
+ * @param fs File system to rename file on.
+ * @param path1 Old path to file.
+ * @param path2 New path to file.
+ */
 void SDCard::RenameFile(fs::FS &fs, const char *path1, const char *path2)
 {
     slog_d("Renaming file %s to %s.", path1, path2);
@@ -161,6 +220,12 @@ void SDCard::RenameFile(fs::FS &fs, const char *path1, const char *path2)
     }
 }
 
+/**
+ * @brief Deletes a file from file system.
+ *
+ * @param fs File system to delete file from.
+ * @param path Path to file to delete.
+ */
 void SDCard::DeleteFile(fs::FS &fs, const char *path)
 {
     slog_d("Deleting file: %s.", path);
@@ -173,6 +238,12 @@ void SDCard::DeleteFile(fs::FS &fs, const char *path)
     }
 }
 
+/**
+ * @brief Tests the IO performance for a file.
+ *
+ * @param fs File system to test IO on.
+ * @param path Path to test file.
+ */
 void SDCard::TestFileIO(fs::FS &fs, const char *path)
 {
     File file = fs.open(path);

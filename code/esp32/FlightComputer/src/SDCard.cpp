@@ -12,7 +12,7 @@
 
 bool SDCard::initSuccessful = false;
 
-//@todo Error handling if init not Successful
+//@todo Error handling and recovery if init not successful.
 
 /**
  * @brief Initializes the SD arduino library.
@@ -25,6 +25,7 @@ void SDCard::Begin()
 
     if (!SD.begin(SD_CS))
     {
+        initSuccessful = false;
         slog_e("Card Mount Failed");
         return;
     }
@@ -33,6 +34,7 @@ void SDCard::Begin()
 
     if (cardType == CARD_NONE)
     {
+        initSuccessful = false;
         slog_e("No SD card attached");
         return;
     }
@@ -54,11 +56,13 @@ void SDCard::ListDir(FS &fs, const char *dirname, uint8_t levels)
     File root = fs.open(dirname);
     if (!root)
     {
+        initSuccessful = false;
         slog_e("Failed to open directory %s", dirname);
         return;
     }
     if (!root.isDirectory())
     {
+        initSuccessful = false;
         slog_e("Not a directory %s", dirname);
         return;
     }
@@ -96,6 +100,7 @@ void SDCard::CreateDir(fs::FS &fs, const char *path)
         slog_i("Dir %s created", path);
     } else
     {
+        initSuccessful = false;
         slog_e("mkdir %s failed", path);
     }
 }
@@ -114,6 +119,7 @@ void SDCard::RemoveDir(fs::FS &fs, const char *path)
         slog_i("Dir %s removed", path);
     } else
     {
+        initSuccessful = false;
         slog_e("rmdir %s failed", path);
     }
 }
@@ -131,6 +137,7 @@ void SDCard::ReadFile(fs::FS &fs, const char *path)
     File file = fs.open(path);
     if (!file)
     {
+        initSuccessful = false;
         slog_e("Failed to open file %s for reading.", path);
         return;
     }
@@ -154,20 +161,18 @@ void SDCard::ReadFile(fs::FS &fs, const char *path)
  */
 void SDCard::WriteFile(fs::FS &fs, const char *path, const char *message)
 {
-//     slog_d("Writing file: %s", path);
-
     File file = fs.open(path, FILE_WRITE);
     if (!file)
     {
+        initSuccessful = false;
         slog_e("Failed to open file %s message %s for writing.", path, message);
         return;
     }
     if (file.print(message))
     {
-//         slog_i("File %s written.", path);
-    } else
-    {
+        initSuccessful = false;
         slog_e("Write file %s message %s failed.", path, message);
+
     }
     file.close();
 }
@@ -183,19 +188,16 @@ void SDCard::WriteFile(fs::FS &fs, const char *path, const char *message)
  */
 void SDCard::AppendFile(fs::FS &fs, const char *path, const char *message)
 {
-//    slog_d("Appending to file: %s", path);
-
     File file = fs.open(path, FILE_APPEND);
     if (!file)
     {
+        initSuccessful = false;
         slog_e("Failed to open file %s for appending %s.", path, message);
         return;
     }
     if (file.print(message))
     {
-//        slog_i("Message %s appended to %s.", path, message);
-    } else
-    {
+        initSuccessful = false;
         slog_e("Append %s to %s failed.", message, path);
     }
     file.close();
@@ -210,12 +212,12 @@ void SDCard::AppendFile(fs::FS &fs, const char *path, const char *message)
  */
 void SDCard::RenameFile(fs::FS &fs, const char *path1, const char *path2)
 {
-    slog_d("Renaming file %s to %s.", path1, path2);
     if (fs.rename(path1, path2))
     {
         slog_i("File %s renamed to %s.", path1, path2);
     } else
     {
+        initSuccessful = false;
         slog_e("Rename %s to  %s failed.", path1, path2);
     }
 }
@@ -228,12 +230,12 @@ void SDCard::RenameFile(fs::FS &fs, const char *path1, const char *path2)
  */
 void SDCard::DeleteFile(fs::FS &fs, const char *path)
 {
-    slog_d("Deleting file: %s.", path);
     if (fs.remove(path))
     {
         slog_i("File %s deleted.", path);
     } else
     {
+        initSuccessful = false;
         slog_e("Delete %s failed.", path);
     }
 }
@@ -271,6 +273,7 @@ void SDCard::TestFileIO(fs::FS &fs, const char *path)
         file.close();
     } else
     {
+        initSuccessful = false;
         slog_e("Failed to open file %s for reading.", path);
     }
 
@@ -278,6 +281,7 @@ void SDCard::TestFileIO(fs::FS &fs, const char *path)
     file = fs.open(path, FILE_WRITE);
     if (!file)
     {
+        initSuccessful = false;
         slog_e("Failed to open file %s for writing.", path);
         return;
     }

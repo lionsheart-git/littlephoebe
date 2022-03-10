@@ -19,7 +19,7 @@ class SDCard
 public:
     SDCard() = delete;
 
-    static void ListDir(fs::FS &fs, const char *dirname, unsigned char levels);
+    static void ListDir(FS &fs, const char *dirname, unsigned char levels);
     static void CreateDir(FS &fs, const char *path);
     static void RemoveDir(FS &fs, const char *path);
     static void ReadFile(FS &fs, const char *path);

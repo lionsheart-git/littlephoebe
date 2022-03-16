@@ -12,6 +12,9 @@
 #include "PinConfiguration.hpp"
 #include "SDCard.hpp"
 
+#include "Sensors/GNSSSensor.hpp"
+#include "Sensors/SensorData.hpp"
+
 static const int RXPin = 36, TXPin = 37;
 static const uint32_t GPSBaud = 9600;
 
@@ -24,15 +27,17 @@ SoftwareSerial ss(RXPin, TXPin);
 
 void setup()
 {
-    // Init SD Card on correct SPI port.
-    SDCard::Begin();
-//
-
-    ss.begin(GPSBaud);
-
     Heltec.begin(true /*DisplayEnable Enable*/, false /*LoRa Disable*/, true /*Serial Enable*/);
     Heltec.display->flipScreenVertically();
     Heltec.display->setFont(ArialMT_Plain_10);
+
+    // Init SD Card on correct SPI port.
+    SDCard::Begin();
+//
+    GNSSSensor gnss;
+    Serial.println(SensorData::Satellites());
+
+    ss.begin(GPSBaud);
 
     slog_i("%s %s %s", "Testing TinyGPS++ library v.", TinyGPSPlus::libraryVersion(), "by Mikal Hart");
     Serial.println();
@@ -43,7 +48,7 @@ void setup()
             "----------------------------------------------------------------------------------------------------------------------------------------");
 }
 
-// This custom version of delay() ensures that the gps object
+// This custom version of delay() ensures that the gps_ object
 // is being "fed".
 static void smartDelay(unsigned long ms)
 {
@@ -211,7 +216,7 @@ void loop()
 
         // Heltec.display->setTextAlignment(TEXT_ALIGN_CENTER);
         // Heltec.display->drawString(52, 0, "Fix: 589");
-        // showInt(gps.sentencesWithFix(), true, "Fix:", TEXT_ALIGN_CENTER, ArialMT_Plain_10, 52, 0);
+        // showInt(gps_.sentencesWithFix(), true, "Fix:", TEXT_ALIGN_CENTER, ArialMT_Plain_10, 52, 0);
 
         // Heltec.display->setTextAlignment(TEXT_ALIGN_RIGHT);
         // Heltec.display->drawString(128, 0, "HDOP: 1.7");
